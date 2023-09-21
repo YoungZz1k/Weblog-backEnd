@@ -1,0 +1,30 @@
+2023-09-19 11:16:31.580 [main] INFO  com.youngzz1k.weblog.WeblogWebApplicationTests - Starting WeblogWebApplicationTests using Java 1.8.0_171 on Young with PID 800 (started by l in E:\code\WebLog\weblog-springboot\weblog-web)
+2023-09-19 11:16:31.581 [main] INFO  com.youngzz1k.weblog.WeblogWebApplicationTests - The following profiles are active: prod
+2023-09-19 11:16:33.294 [main] INFO  com.youngzz1k.weblog.WeblogWebApplicationTests - Started WeblogWebApplicationTests in 2.355 seconds (JVM running for 3.749)
+2023-09-19 11:16:33.555 [main] INFO  com.youngzz1k.weblog.WeblogWebApplicationTests - info 级别 。。。
+2023-09-19 11:16:33.555 [main] WARN  com.youngzz1k.weblog.WeblogWebApplicationTests - warn 级别 。。。
+2023-09-19 11:16:33.595 [main] ERROR com.youngzz1k.weblog.WeblogWebApplicationTests - error 级别 。。。
+2023-09-19 11:16:33.595 [main] INFO  com.youngzz1k.weblog.WeblogWebApplicationTests - 占位符日志 YoungZz1k
+[TraceId: ] 2023-09-19 19:45:00.114 [main] INFO  com.youngzz1k.weblog.WeblogWebApplication - Starting WeblogWebApplication using Java 1.8.0_171 on Young with PID 5272 (E:\code\WebLog\weblog-springboot\weblog-web\target\classes started by l in E:\code\WebLog\weblog-springboot)
+[TraceId: ] 2023-09-19 19:45:00.116 [main] INFO  com.youngzz1k.weblog.WeblogWebApplication - The following profiles are active: prod
+[TraceId: ] 2023-09-19 19:45:00.895 [main] INFO  o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat initialized with port(s): 8080 (http)
+[TraceId: ] 2023-09-19 19:45:00.902 [main] INFO  org.apache.catalina.core.StandardService - Starting service [Tomcat]
+[TraceId: ] 2023-09-19 19:45:00.902 [main] INFO  org.apache.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/9.0.56]
+[TraceId: ] 2023-09-19 19:45:00.970 [main] INFO  o.a.c.core.ContainerBase.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+[TraceId: ] 2023-09-19 19:45:00.970 [main] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 824 ms
+[TraceId: ] 2023-09-19 19:45:01.281 [main] INFO  o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat started on port(s): 8080 (http) with context path ''
+[TraceId: ] 2023-09-19 19:45:01.289 [main] INFO  com.youngzz1k.weblog.WeblogWebApplication - Started WeblogWebApplication in 1.666 seconds (JVM running for 2.628)
+[TraceId: ] 2023-09-19 19:45:33.274 [main] INFO  com.youngzz1k.weblog.WeblogWebApplication - Starting WeblogWebApplication using Java 1.8.0_171 on Young with PID 11536 (E:\code\WebLog\weblog-springboot\weblog-web\target\classes started by l in E:\code\WebLog\weblog-springboot)
+[TraceId: ] 2023-09-19 19:45:33.276 [main] INFO  com.youngzz1k.weblog.WeblogWebApplication - The following profiles are active: prod
+[TraceId: ] 2023-09-19 19:45:34.011 [main] INFO  o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat initialized with port(s): 8080 (http)
+[TraceId: ] 2023-09-19 19:45:34.017 [main] INFO  org.apache.catalina.core.StandardService - Starting service [Tomcat]
+[TraceId: ] 2023-09-19 19:45:34.017 [main] INFO  org.apache.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/9.0.56]
+[TraceId: ] 2023-09-19 19:45:34.080 [main] INFO  o.a.c.core.ContainerBase.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+[TraceId: ] 2023-09-19 19:45:34.080 [main] INFO  o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 772 ms
+[TraceId: ] 2023-09-19 19:45:34.378 [main] INFO  o.s.boot.web.embedded.tomcat.TomcatWebServer - Tomcat started on port(s): 8080 (http) with context path ''
+[TraceId: ] 2023-09-19 19:45:34.386 [main] INFO  com.youngzz1k.weblog.WeblogWebApplication - Started WeblogWebApplication in 1.582 seconds (JVM running for 2.616)
+[TraceId: ] 2023-09-19 19:51:17.623 [http-nio-8080-exec-2] INFO  o.a.c.core.ContainerBase.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+[TraceId: ] 2023-09-19 19:51:17.623 [http-nio-8080-exec-2] INFO  org.springframework.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+[TraceId: ] 2023-09-19 19:51:17.625 [http-nio-8080-exec-2] INFO  org.springframework.web.servlet.DispatcherServlet - Completed initialization in 2 ms
+[TraceId: 70e3a57b-3490-4403-ab26-f575421c212a] 2023-09-19 19:51:17.818 [http-nio-8080-exec-2] INFO  c.y.weblog.common.aspect.ApiOperationLogAspect - ====== 请求开始: [测试接口], 入参: {"userName":"zhangsan","sex":"1"}, 请求类: TestController, 请求方法: test =================================== 
+[TraceId: 70e3a57b-3490-4403-ab26-f575421c212a] 2023-09-19 19:51:17.833 [http-nio-8080-exec-2] INFO  c.y.weblog.common.aspect.ApiOperationLogAspect - ====== 请求结束: [测试接口], 耗时: 35ms, 出参: {"userName":"zhangsan","sex":"1"} =================================== 
