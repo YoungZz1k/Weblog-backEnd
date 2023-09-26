@@ -2,3 +2,13 @@ spring:
   profiles:
     # 默认开发环境 dev
     active: dev
+#  jackson:    可以设置返回的数据中如果存在null字段则不返回该字段
+#    # 设置后台返参，若字段值为 null, 则不返回
+#    default-property-inclusion: non_null
+#    # 设置日期字段格式
+#    date-format: yyyy-MM-dd HH:mm:ss
+jwt:
+  # 签发人
+  issuer: YoungZz1k
+  # 秘钥
+  secret: X+gHraNm0Sa6fTcWvnjHf7fCOup+H+aGpoAeQJuT5pJPqPJKDoa+OCDB1n4pUKVpsUp+bfDvKPC2yEeCA/BHnQ==
