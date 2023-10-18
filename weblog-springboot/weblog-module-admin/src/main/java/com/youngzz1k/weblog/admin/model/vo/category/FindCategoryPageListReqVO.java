@@ -1,4 +1,4 @@
-package com.youngzz1k.weblog.admin.model.vo;
+package com.youngzz1k.weblog.admin.model.vo.category;
 
 import com.youngzz1k.weblog.common.model.BasePageQuery;
 import io.swagger.annotations.ApiModel;

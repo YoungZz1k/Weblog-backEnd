@@ -3,8 +3,9 @@ package com.youngzz1k.weblog.admin.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.youngzz1k.weblog.admin.model.vo.FindCategoryPageListReqVO;
-import com.youngzz1k.weblog.admin.model.vo.FindCategoryPageListRspVO;
+import com.youngzz1k.weblog.admin.model.vo.category.DeleteCategoryReqVO;
+import com.youngzz1k.weblog.admin.model.vo.category.FindCategoryPageListReqVO;
+import com.youngzz1k.weblog.admin.model.vo.category.FindCategoryPageListRspVO;
 import com.youngzz1k.weblog.admin.model.vo.category.AddCategoryReqVO;
 import com.youngzz1k.weblog.admin.service.AdminCategoryService;
 import com.youngzz1k.weblog.common.domain.dos.CategoryDO;
@@ -99,5 +100,16 @@ public class AdminCategoryServiceImpl implements AdminCategoryService {
         }
 
         return PageResponse.success(categoryDOPage, vos);
+    }
+
+    @Override
+    public Response deleteCategory(DeleteCategoryReqVO deleteCategoryReqVO) {
+        // 分类 ID
+        Long categoryId = deleteCategoryReqVO.getId();
+
+        // 删除分类
+        categoryMapper.deleteById(categoryId);
+
+        return Response.success();
     }
 }

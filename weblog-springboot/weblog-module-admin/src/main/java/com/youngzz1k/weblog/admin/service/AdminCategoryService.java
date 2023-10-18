@@ -1,6 +1,7 @@
 package com.youngzz1k.weblog.admin.service;
 
-import com.youngzz1k.weblog.admin.model.vo.FindCategoryPageListReqVO;
+import com.youngzz1k.weblog.admin.model.vo.category.DeleteCategoryReqVO;
+import com.youngzz1k.weblog.admin.model.vo.category.FindCategoryPageListReqVO;
 import com.youngzz1k.weblog.admin.model.vo.category.AddCategoryReqVO;
 import com.youngzz1k.weblog.common.utils.PageResponse;
 import com.youngzz1k.weblog.common.utils.Response;
@@ -21,4 +22,10 @@ public interface AdminCategoryService {
      */
     PageResponse findCategoryList(FindCategoryPageListReqVO findCategoryPageListReqVO);
 
+    /**
+     * 删除分类
+     * @param deleteCategoryReqVO
+     * @return
+     */
+    Response deleteCategory(DeleteCategoryReqVO deleteCategoryReqVO);
 }
