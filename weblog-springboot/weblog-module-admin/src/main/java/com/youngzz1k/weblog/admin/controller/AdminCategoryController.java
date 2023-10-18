@@ -1,9 +1,11 @@
 package com.youngzz1k.weblog.admin.controller;
 
 
+import com.youngzz1k.weblog.admin.model.vo.FindCategoryPageListReqVO;
 import com.youngzz1k.weblog.admin.model.vo.category.AddCategoryReqVO;
 import com.youngzz1k.weblog.admin.service.AdminCategoryService;
 import com.youngzz1k.weblog.common.aspect.ApiOperationLog;
+import com.youngzz1k.weblog.common.utils.PageResponse;
 import com.youngzz1k.weblog.common.utils.Response;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -29,5 +31,11 @@ public class AdminCategoryController {
         return categoryService.addCategory(addCategoryReqVO);
     }
 
+    @PostMapping("/category/list")
+    @ApiOperation(value = "分类分页数据获取")
+    @ApiOperationLog(description = "分类分页数据获取")
+    public PageResponse findCategoryList(@RequestBody @Validated FindCategoryPageListReqVO findCategoryPageListReqVO) {
+        return categoryService.findCategoryList(findCategoryPageListReqVO);
+    }
 
 }
