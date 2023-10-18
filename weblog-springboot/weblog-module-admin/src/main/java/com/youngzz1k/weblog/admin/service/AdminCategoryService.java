@@ -6,6 +6,7 @@ import com.youngzz1k.weblog.admin.model.vo.category.AddCategoryReqVO;
 import com.youngzz1k.weblog.common.utils.PageResponse;
 import com.youngzz1k.weblog.common.utils.Response;
 
+
 public interface AdminCategoryService {
 
     /**
@@ -28,4 +29,10 @@ public interface AdminCategoryService {
      * @return
      */
     Response deleteCategory(DeleteCategoryReqVO deleteCategoryReqVO);
+
+    /**
+     * 获取文章分类的 Select 列表数据
+     * @return
+     */
+    Response findCategorySelectList();
 }
