@@ -1,4 +1,4 @@
-package com.youngzz1k.weblog.admin.model.vo;
+package com.youngzz1k.weblog.admin.model.vo.user;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

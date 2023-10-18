@@ -1,10 +1,10 @@
 package com.youngzz1k.weblog.admin.service.impl;
 
-import com.youngzz1k.weblog.admin.model.vo.FindUserInfoRspVO;
+import com.youngzz1k.weblog.admin.model.vo.user.FindUserInfoRspVO;
 import com.youngzz1k.weblog.common.domain.mapper.UserMapper;
 import com.youngzz1k.weblog.common.enums.ResponseCodeEnum;
 import com.youngzz1k.weblog.common.utils.Response;
-import com.youngzz1k.weblog.admin.model.vo.UpdateAdminUserPasswordReqVO;
+import com.youngzz1k.weblog.admin.model.vo.user.UpdateAdminUserPasswordReqVO;
 import com.youngzz1k.weblog.admin.service.AdminUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;

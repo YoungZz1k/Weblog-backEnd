@@ -1,5 +1,6 @@
 package com.youngzz1k.weblog.common.config;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
@@ -39,6 +40,9 @@ public class JacksonConfig {
 
         // 设置时区
         objectMapper.setTimeZone(TimeZone.getTimeZone("Asia/Shanghai"));
+
+        // 忽略未知属性
+        objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 
         // 设置凡是为 null 的字段，返参中均不返回，请根据项目组约定是否开启
         // objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);

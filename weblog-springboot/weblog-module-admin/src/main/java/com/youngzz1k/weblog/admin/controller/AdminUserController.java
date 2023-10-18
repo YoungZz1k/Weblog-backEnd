@@ -2,7 +2,7 @@ package com.youngzz1k.weblog.admin.controller;
 
 import com.youngzz1k.weblog.common.aspect.ApiOperationLog;
 import com.youngzz1k.weblog.common.utils.Response;
-import com.youngzz1k.weblog.admin.model.vo.UpdateAdminUserPasswordReqVO;
+import com.youngzz1k.weblog.admin.model.vo.user.UpdateAdminUserPasswordReqVO;
 import com.youngzz1k.weblog.admin.service.AdminUserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;

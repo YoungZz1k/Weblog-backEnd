@@ -1,7 +1,7 @@
 package com.youngzz1k.weblog.admin.service;
 
 import com.youngzz1k.weblog.common.utils.Response;
-import com.youngzz1k.weblog.admin.model.vo.UpdateAdminUserPasswordReqVO;
+import com.youngzz1k.weblog.admin.model.vo.user.UpdateAdminUserPasswordReqVO;
 
 public interface AdminUserService {
 
