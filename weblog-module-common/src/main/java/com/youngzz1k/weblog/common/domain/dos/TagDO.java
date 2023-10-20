@@ -3,19 +3,22 @@ package com.youngzz1k.weblog.common.domain.dos;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
 /**
- * 分类实体类
+ * 标签实体类
  */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@TableName("t_category")
-public class CategoryDO {
+@TableName("t_tag")
+public class TagDO {
 
     @TableId(type = IdType.AUTO)
     private Long id;

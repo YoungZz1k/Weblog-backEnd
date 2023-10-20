@@ -11,6 +11,9 @@ import lombok.NoArgsConstructor;
 
 import java.util.Date;
 
+/**
+ * 用户实体类
+ */
 @TableName("t_user")
 @Data
 @AllArgsConstructor
