@@ -5,6 +5,7 @@ import com.youngzz1k.weblog.admin.model.vo.category.AddCategoryReqVO;
 import com.youngzz1k.weblog.admin.model.vo.category.DeleteCategoryReqVO;
 import com.youngzz1k.weblog.admin.model.vo.category.FindCategoryPageListReqVO;
 import com.youngzz1k.weblog.admin.model.vo.tag.AddTagReqVO;
+import com.youngzz1k.weblog.admin.model.vo.tag.FindTagPageListReqVO;
 import com.youngzz1k.weblog.admin.service.AdminCategoryService;
 import com.youngzz1k.weblog.admin.service.AdminTagService;
 import com.youngzz1k.weblog.common.aspect.ApiOperationLog;
@@ -34,12 +35,12 @@ public class AdminTagController {
         return tagService.addTags(addTagReqVO);
     }
 
-//    @PostMapping("/category/list")
-//    @ApiOperation(value = "分类分页数据获取")
-//    @ApiOperationLog(description = "分类分页数据获取")
-//    public PageResponse findCategoryList(@RequestBody @Validated FindCategoryPageListReqVO findCategoryPageListReqVO) {
-//        return categoryService.findCategoryList(findCategoryPageListReqVO);
-//    }
+    @PostMapping("/tag/list")
+    @ApiOperation(value = "标签分页数据获取")
+    @ApiOperationLog(description = "标签分页数据获取")
+    public PageResponse findTagPageList(@RequestBody @Validated FindTagPageListReqVO findTagPageListReqVO) {
+        return tagService.findTagPageList(findTagPageListReqVO);
+    }
 //
 //    @PostMapping("/category/delete")
 //    @ApiOperation(value = "删除分类")

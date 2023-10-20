@@ -4,6 +4,7 @@ import com.youngzz1k.weblog.admin.model.vo.category.AddCategoryReqVO;
 import com.youngzz1k.weblog.admin.model.vo.category.DeleteCategoryReqVO;
 import com.youngzz1k.weblog.admin.model.vo.category.FindCategoryPageListReqVO;
 import com.youngzz1k.weblog.admin.model.vo.tag.AddTagReqVO;
+import com.youngzz1k.weblog.admin.model.vo.tag.FindTagPageListReqVO;
 import com.youngzz1k.weblog.common.utils.PageResponse;
 import com.youngzz1k.weblog.common.utils.Response;
 
@@ -16,4 +17,11 @@ public interface AdminTagService {
      * @return
      */
     Response addTags(AddTagReqVO addTagReqVO);
+
+    /**
+     * 标签分页查询
+     * @param findTagPageListReqVO
+     * @return
+     */
+    PageResponse findTagPageList(FindTagPageListReqVO findTagPageListReqVO);
 }

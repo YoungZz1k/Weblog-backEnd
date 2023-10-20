@@ -9,6 +9,8 @@ import com.youngzz1k.weblog.admin.model.vo.category.DeleteCategoryReqVO;
 import com.youngzz1k.weblog.admin.model.vo.category.FindCategoryPageListReqVO;
 import com.youngzz1k.weblog.admin.model.vo.category.FindCategoryPageListRspVO;
 import com.youngzz1k.weblog.admin.model.vo.tag.AddTagReqVO;
+import com.youngzz1k.weblog.admin.model.vo.tag.FindTagPageListReqVO;
+import com.youngzz1k.weblog.admin.model.vo.tag.FindTagPageListRspVO;
 import com.youngzz1k.weblog.admin.service.AdminCategoryService;
 import com.youngzz1k.weblog.admin.service.AdminTagService;
 import com.youngzz1k.weblog.common.domain.dos.CategoryDO;
@@ -58,5 +60,34 @@ public class AdminTagServiceImpl extends ServiceImpl<TagMapper, TagDO> implement
         }
 
         return Response.success();
+    }
+
+    @Override
+    public PageResponse findTagPageList(FindTagPageListReqVO findTagPageListReqVO) {
+
+        //分页参数和条件参数
+        String name = findTagPageListReqVO.getName();
+        Long current = findTagPageListReqVO.getCurrent();
+        Long size = findTagPageListReqVO.getSize();
+        LocalDate startDate = findTagPageListReqVO.getStartDate();
+        LocalDate endDate = findTagPageListReqVO.getEndDate();
+
+        //分页查询
+        Page<TagDO> page = tagMapper.selectPageList(current, size, name, startDate, endDate);
+
+        List<TagDO> tagDOS = page.getRecords();
+
+        //DO转VO
+        List<FindTagPageListRspVO> vos = null;
+
+        if(!CollectionUtils.isEmpty(tagDOS)){
+            vos = tagDOS.stream().map(tagDo -> FindTagPageListRspVO.builder()
+                    .id(tagDo.getId())
+                    .name(tagDo.getName())
+                    .createTime(tagDo.getCreateTime())
+                    .build())
+                    .collect(Collectors.toList());
+        }
+        return PageResponse.success(page, vos);
     }
 }
