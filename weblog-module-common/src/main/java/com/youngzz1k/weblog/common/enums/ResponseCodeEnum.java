@@ -28,6 +28,10 @@ public enum ResponseCodeEnum implements BaseExceptionInterface {
     USERNAME_NOT_FOUND("20003","该用户不存在"),
 
     CATEGORY_NAME_IS_EXISTED("20005","此分类已存在，请勿重复添加！"),
+
+    TAG_CANT_DUPLICATE("20006","请勿添加表中已存在的标签！"),
+
+    TAG_NOT_EXISTED("20007","该标签不存在！"),
     ;
 
     //异常码
