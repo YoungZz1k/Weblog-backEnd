@@ -6,6 +6,7 @@ import com.youngzz1k.weblog.admin.model.vo.category.FindCategoryPageListReqVO;
 import com.youngzz1k.weblog.admin.model.vo.tag.AddTagReqVO;
 import com.youngzz1k.weblog.admin.model.vo.tag.DeleteTagReqVO;
 import com.youngzz1k.weblog.admin.model.vo.tag.FindTagPageListReqVO;
+import com.youngzz1k.weblog.admin.model.vo.tag.SearchTagReqVO;
 import com.youngzz1k.weblog.common.utils.PageResponse;
 import com.youngzz1k.weblog.common.utils.Response;
 
@@ -32,4 +33,11 @@ public interface AdminTagService {
      * @return
      */
     Response deleteTag(DeleteTagReqVO deleteTagReqVO);
+
+    /**
+     * 根据标签关键词模糊查询
+     * @param searchTagReqVO
+     * @return
+     */
+    Response searchTag(SearchTagReqVO searchTagReqVO);
 }

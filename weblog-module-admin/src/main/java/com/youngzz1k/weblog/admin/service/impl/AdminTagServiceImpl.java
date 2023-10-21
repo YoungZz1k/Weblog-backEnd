@@ -8,10 +8,7 @@ import com.youngzz1k.weblog.admin.model.vo.category.AddCategoryReqVO;
 import com.youngzz1k.weblog.admin.model.vo.category.DeleteCategoryReqVO;
 import com.youngzz1k.weblog.admin.model.vo.category.FindCategoryPageListReqVO;
 import com.youngzz1k.weblog.admin.model.vo.category.FindCategoryPageListRspVO;
-import com.youngzz1k.weblog.admin.model.vo.tag.AddTagReqVO;
-import com.youngzz1k.weblog.admin.model.vo.tag.DeleteTagReqVO;
-import com.youngzz1k.weblog.admin.model.vo.tag.FindTagPageListReqVO;
-import com.youngzz1k.weblog.admin.model.vo.tag.FindTagPageListRspVO;
+import com.youngzz1k.weblog.admin.model.vo.tag.*;
 import com.youngzz1k.weblog.admin.service.AdminCategoryService;
 import com.youngzz1k.weblog.admin.service.AdminTagService;
 import com.youngzz1k.weblog.common.domain.dos.CategoryDO;
@@ -101,5 +98,26 @@ public class AdminTagServiceImpl extends ServiceImpl<TagMapper, TagDO> implement
         int count = tagMapper.deleteById(id);
 
         return count == 1 ? Response.success() : Response.fail(ResponseCodeEnum.TAG_NOT_EXISTED);
+    }
+
+    @Override
+    public Response searchTag(SearchTagReqVO searchTagReqVO) {
+        String key = searchTagReqVO.getKey();
+
+        //  执行模糊查询
+        List<TagDO> tagDOS = tagMapper.selectByKey(key);
+
+        List<SelectRspVO> rspVOS = null;
+
+        if(!CollectionUtils.isEmpty(tagDOS)){
+            //DO转VO
+            rspVOS =  tagDOS.stream().map(tagDO -> SelectRspVO
+                            .builder()
+                            .label(tagDO.getName())
+                            .value(tagDO.getId())
+                            .build())
+                    .collect(Collectors.toList());
+        }
+        return Response.success(rspVOS);
     }
 }
