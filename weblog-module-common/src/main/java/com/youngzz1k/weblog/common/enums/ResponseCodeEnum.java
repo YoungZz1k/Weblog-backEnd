@@ -32,6 +32,9 @@ public enum ResponseCodeEnum implements BaseExceptionInterface {
     TAG_CANT_DUPLICATE("20006","请勿添加表中已存在的标签！"),
 
     TAG_NOT_EXISTED("20007","该标签不存在！"),
+
+    FILE_UPLOAD_FAILED("20008","文件上传失败！"),
+
     ;
 
     //异常码
