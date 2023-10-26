@@ -1,5 +1,6 @@
 package com.youngzz1k.weblog.admin.controller;
 
+import com.youngzz1k.weblog.admin.model.vo.article.DeleteArticleReqVO;
 import com.youngzz1k.weblog.admin.model.vo.article.PublishArticleReqVO;
 import com.youngzz1k.weblog.admin.service.AdminArticleService;
 import com.youngzz1k.weblog.common.aspect.ApiOperationLog;
@@ -22,12 +23,22 @@ public class AdminArticleController {
     @Autowired
     private AdminArticleService adminArticleService;
 
+
+
     @PostMapping("/publish")
     @ApiOperation(value = "文章发布")
     @ApiOperationLog(description = "文章发布")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public Response publishArticle(@RequestBody @Validated PublishArticleReqVO publishArticleReqVO){
         return adminArticleService.publishArticle(publishArticleReqVO);
+    }
+
+    @PostMapping("/delete")
+    @ApiOperation(value = "文章删除")
+    @ApiOperationLog(description = "文章删除")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public Response deleteArticle(@RequestBody @Validated DeleteArticleReqVO deleteArticleReqVO) {
+        return adminArticleService.deleteArticle(deleteArticleReqVO);
     }
 
 }
