@@ -1,6 +1,7 @@
 package com.youngzz1k.weblog.admin.service;
 
 import com.youngzz1k.weblog.admin.model.vo.article.DeleteArticleReqVO;
+import com.youngzz1k.weblog.admin.model.vo.article.FindArticlePageListReqVO;
 import com.youngzz1k.weblog.admin.model.vo.article.PublishArticleReqVO;
 import com.youngzz1k.weblog.common.utils.Response;
 
@@ -18,4 +19,11 @@ public interface AdminArticleService {
      * @return
      */
     Response deleteArticle(DeleteArticleReqVO deleteArticleReqVO);
+
+    /**
+     * 查询文章分页数据
+     * @param findArticlePageListReqVO
+     * @return
+     */
+    Response findArticlePageList(FindArticlePageListReqVO findArticlePageListReqVO);
 }

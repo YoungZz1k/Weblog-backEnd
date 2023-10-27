@@ -1,6 +1,7 @@
 package com.youngzz1k.weblog.admin.controller;
 
 import com.youngzz1k.weblog.admin.model.vo.article.DeleteArticleReqVO;
+import com.youngzz1k.weblog.admin.model.vo.article.FindArticlePageListReqVO;
 import com.youngzz1k.weblog.admin.model.vo.article.PublishArticleReqVO;
 import com.youngzz1k.weblog.admin.service.AdminArticleService;
 import com.youngzz1k.weblog.common.aspect.ApiOperationLog;
@@ -21,7 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class AdminArticleController {
 
     @Autowired
-    private AdminArticleService adminArticleService;
+    private AdminArticleService articleService;
 
 
 
@@ -30,7 +31,7 @@ public class AdminArticleController {
     @ApiOperationLog(description = "文章发布")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public Response publishArticle(@RequestBody @Validated PublishArticleReqVO publishArticleReqVO){
-        return adminArticleService.publishArticle(publishArticleReqVO);
+        return articleService.publishArticle(publishArticleReqVO);
     }
 
     @PostMapping("/delete")
@@ -38,7 +39,14 @@ public class AdminArticleController {
     @ApiOperationLog(description = "文章删除")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public Response deleteArticle(@RequestBody @Validated DeleteArticleReqVO deleteArticleReqVO) {
-        return adminArticleService.deleteArticle(deleteArticleReqVO);
+        return articleService.deleteArticle(deleteArticleReqVO);
+    }
+
+    @PostMapping("/list")
+    @ApiOperation(value = "查询文章分页数据")
+    @ApiOperationLog(description = "查询文章分页数据")
+    public Response findArticlePageList(@RequestBody @Validated FindArticlePageListReqVO findArticlePageListReqVO) {
+        return articleService.findArticlePageList(findArticlePageListReqVO);
     }
 
 }
