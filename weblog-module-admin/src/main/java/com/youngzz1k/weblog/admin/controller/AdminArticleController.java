@@ -1,6 +1,7 @@
 package com.youngzz1k.weblog.admin.controller;
 
 import com.youngzz1k.weblog.admin.model.vo.article.DeleteArticleReqVO;
+import com.youngzz1k.weblog.admin.model.vo.article.FindArticleDetailReqVO;
 import com.youngzz1k.weblog.admin.model.vo.article.FindArticlePageListReqVO;
 import com.youngzz1k.weblog.admin.model.vo.article.PublishArticleReqVO;
 import com.youngzz1k.weblog.admin.service.AdminArticleService;
@@ -47,6 +48,13 @@ public class AdminArticleController {
     @ApiOperationLog(description = "查询文章分页数据")
     public Response findArticlePageList(@RequestBody @Validated FindArticlePageListReqVO findArticlePageListReqVO) {
         return articleService.findArticlePageList(findArticlePageListReqVO);
+    }
+
+    @PostMapping("/detail")
+    @ApiOperation(value = "查询文章详情")
+    @ApiOperationLog(description = "查询文章详情")
+    public Response findArticleDetail(@RequestBody @Validated FindArticleDetailReqVO findArticlePageListReqVO) {
+        return articleService.findArticleDetail(findArticlePageListReqVO);
     }
 
 }
