@@ -58,7 +58,7 @@ public class AdminTagController {
         return tagService.searchTag(searchTagReqVO);
     }
 
-    @PostMapping("/select/list")
+    @PostMapping("/tag/select/list")
     @ApiOperation(value = "查询标签 Select 列表数据")
     @ApiOperationLog(description = "查询标签 Select 列表数据")
     public Response findTagSelectList() {

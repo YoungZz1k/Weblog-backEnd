@@ -12,8 +12,10 @@ import com.youngzz1k.weblog.admin.model.vo.category.FindCategoryPageListRspVO;
 import com.youngzz1k.weblog.admin.model.vo.tag.*;
 import com.youngzz1k.weblog.admin.service.AdminCategoryService;
 import com.youngzz1k.weblog.admin.service.AdminTagService;
+import com.youngzz1k.weblog.common.domain.dos.ArticleTagRelDO;
 import com.youngzz1k.weblog.common.domain.dos.CategoryDO;
 import com.youngzz1k.weblog.common.domain.dos.TagDO;
+import com.youngzz1k.weblog.common.domain.mapper.ArticleTagRelMapper;
 import com.youngzz1k.weblog.common.domain.mapper.CategoryMapper;
 import com.youngzz1k.weblog.common.domain.mapper.TagMapper;
 import com.youngzz1k.weblog.common.enums.ResponseCodeEnum;
@@ -38,6 +40,9 @@ public class AdminTagServiceImpl extends ServiceImpl<TagMapper, TagDO> implement
 
     @Autowired
     private TagMapper tagMapper;
+
+    @Autowired
+    private ArticleTagRelMapper articleTagRelMapper;
 
     @Override
     public Response addTags(AddTagReqVO addTagReqVO) {
@@ -90,13 +95,27 @@ public class AdminTagServiceImpl extends ServiceImpl<TagMapper, TagDO> implement
         return PageResponse.success(page, vos);
     }
 
+    /**
+     * 删除标签
+     *
+     * @param deleteTagReqVO
+     * @return
+     */
     @Override
     public Response deleteTag(DeleteTagReqVO deleteTagReqVO) {
+        // 标签 ID
+        Long tagId = deleteTagReqVO.getId();
 
-        //标签Id
-        Long id = deleteTagReqVO.getId();
+        // 校验该标签下是否有关联的文章，若有，则不允许删除，提示用户需要先删除标签下的文章
+        ArticleTagRelDO articleTagRelDO = articleTagRelMapper.selectOneByTagId(tagId);
 
-        int count = tagMapper.deleteById(id);
+        if (Objects.nonNull(articleTagRelDO)) {
+            log.warn("==> 此标签下包含文章，无法删除，tagId: {}", tagId);
+            throw new BizException(ResponseCodeEnum.TAG_CAN_NOT_DELETE);
+        }
+
+        // 根据标签 ID 删除
+        int count = tagMapper.deleteById(tagId);
 
         return count == 1 ? Response.success() : Response.fail(ResponseCodeEnum.TAG_NOT_EXISTED);
     }
