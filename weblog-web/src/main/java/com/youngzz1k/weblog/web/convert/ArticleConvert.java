@@ -4,6 +4,7 @@ import com.youngzz1k.weblog.common.domain.dos.ArticleDO;
 import com.youngzz1k.weblog.web.model.VO.archive.FindArchiveArticleRspVO;
 import com.youngzz1k.weblog.web.model.VO.article.FindIndexArticlePageListRspVO;
 import com.youngzz1k.weblog.web.model.VO.category.FindCategoryArticlePageListRspVO;
+import com.youngzz1k.weblog.web.model.VO.tag.FindTagArticlePageListRspVO;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
@@ -40,4 +41,12 @@ public interface ArticleConvert {
      */
     @Mapping(target = "createDate", expression = "java(java.time.LocalDate.from(bean.getCreateTime()))")
     FindCategoryArticlePageListRspVO convertDO2CategoryArticleVO(ArticleDO bean);
+
+    /**
+     * ArticleDO -> FindTagArticlePageListRspVO
+     * @param bean
+     * @return
+     */
+    @Mapping(target = "createDate", expression = "java(java.time.LocalDate.from(bean.getCreateTime()))")
+    FindTagArticlePageListRspVO convertDO2TagArticleVO(ArticleDO bean);
 }
