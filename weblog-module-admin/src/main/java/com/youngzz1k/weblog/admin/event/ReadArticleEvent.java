@@ -15,4 +15,6 @@ public class ReadArticleEvent extends ApplicationEvent {
         super(source);
         this.articleId = articleId;
     }
+
+
 }
