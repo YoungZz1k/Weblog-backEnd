@@ -6,6 +6,7 @@ import com.youngzz1k.weblog.common.domain.dos.StatisticsArticlePVDO;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Mapper
 public interface StatisticsArticlePVMapper extends BaseMapper<StatisticsArticlePVDO> {
@@ -18,5 +19,15 @@ public interface StatisticsArticlePVMapper extends BaseMapper<StatisticsArticleP
         return update(null, Wrappers.<StatisticsArticlePVDO>lambdaUpdate()
                 .setSql("pv_count = pv_count + 1")
                 .eq(StatisticsArticlePVDO::getPvDate, date));
+    }
+
+    /**
+     * 查询最近一周的文章 PV 访问量记录
+     * @return
+     */
+    default List<StatisticsArticlePVDO> selectLatestWeekRecords() {
+        return selectList(Wrappers.<StatisticsArticlePVDO>lambdaQuery()
+                .le(StatisticsArticlePVDO::getPvDate, LocalDate.now()) // 小于等于当前日期
+                .last("limit 7")); // 仅查询七条
     }
 }
