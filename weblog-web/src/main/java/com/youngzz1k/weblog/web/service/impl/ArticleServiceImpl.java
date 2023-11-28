@@ -1,5 +1,8 @@
 package com.youngzz1k.weblog.web.service.impl;
 
+import cn.hutool.core.lang.TypeReference;
+import cn.hutool.json.JSONUtil;
+import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.google.common.collect.Lists;
@@ -16,9 +19,12 @@ import com.youngzz1k.weblog.web.model.VO.article.*;
 import com.youngzz1k.weblog.web.model.VO.category.FindCategoryListRspVO;
 import com.youngzz1k.weblog.web.model.VO.tag.FindTagListRspVO;
 import com.youngzz1k.weblog.web.service.ArticleService;
+import com.youngzz1k.weblog.web.utils.RedisConstans;
+import com.youngzz1k.weblog.web.utils.nxLock;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
@@ -26,7 +32,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
+
+import static com.youngzz1k.weblog.web.utils.RedisConstans.*;
 
 @Service
 @Slf4j
@@ -46,6 +55,10 @@ public class ArticleServiceImpl implements ArticleService {
     private ArticleTagRelMapper articleTagRelMapper;
     @Autowired
     private ApplicationEventPublisher eventPublisher;
+    @Autowired
+    private StringRedisTemplate redisTemplate;
+    @Autowired
+    private nxLock nxLock;
 
     /**
      * 获取首页文章分页数据
@@ -55,6 +68,20 @@ public class ArticleServiceImpl implements ArticleService {
      */
     @Override
     public Response findArticlePageList(FindIndexArticlePageListReqVO findIndexArticlePageListReqVO) {
+
+        // 查询redis中是否有数据
+        String articleJsonStr = (String) redisTemplate.opsForHash().get(ARTICLE_KEY,ARTICLE_CONTENT);
+        String pageJsonStr =(String) redisTemplate.opsForHash().get(ARTICLE_KEY, ARTICLE_PAGE);
+        if (StringUtils.isNotBlank(articleJsonStr) && StringUtils.isNotBlank(pageJsonStr)){
+            // 缓存有
+            // 解析json返回
+            List<FindIndexArticlePageListRspVO> bean = JSONUtil.toBean(articleJsonStr, new TypeReference<List<FindIndexArticlePageListRspVO>>() {
+            }, false);
+            Page<ArticleDO> page = JSONUtil.toBean(pageJsonStr, new TypeReference<Page<ArticleDO>>() {
+            }, false);
+            return PageResponse.success(page, bean);
+        }
+        // 无缓存 从数据库查
         Long current = findIndexArticlePageListReqVO.getCurrent();
         Long size = findIndexArticlePageListReqVO.getSize();
 
@@ -132,6 +159,27 @@ public class ArticleServiceImpl implements ArticleService {
                 // 设置转换后的标签数据
                 vo.setTags(findTagListRspVOS);
             });
+        }
+        // 更新缓存
+        // 先获取锁
+        try {
+            if (!nxLock.tryLock("article:lock:")) {
+                // 未获取到锁 休眠并重试
+                Thread.sleep(50);
+                return findArticlePageList(findIndexArticlePageListReqVO);
+            }
+            // 获取到锁 更新缓存
+            String pageJson = JSONUtil.toJsonStr(articleDOPage);
+            String vosJson = JSONUtil.toJsonStr(vos);
+            redisTemplate.opsForHash().put(ARTICLE_KEY,ARTICLE_PAGE,pageJson);
+            redisTemplate.opsForHash().put(ARTICLE_KEY,ARTICLE_CONTENT,vosJson);
+            // 缓存时间30min
+            redisTemplate.expire(ARTICLE_KEY,30L,TimeUnit.MINUTES);
+        }catch (InterruptedException e){
+            throw new RuntimeException(e);
+        }
+        finally {
+            nxLock.unLock("article:lock:");
         }
 
         return PageResponse.success(articleDOPage, vos);

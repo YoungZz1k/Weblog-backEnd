@@ -63,6 +63,10 @@
 
         <commonmark.version>0.20.0</commonmark.version>
 
+        <hutool.version>5.7.17</hutool.version>
+
+        <redis.version>2.7.0</redis.version>
+
     </properties>
 
     <!--依赖统一管理-->
@@ -189,6 +193,18 @@
                 <groupId>org.commonmark</groupId>
                 <artifactId>commonmark-ext-task-list-items</artifactId>
                 <version>${commonmark.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-data-redis</artifactId>
+                <version>${redis.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>cn.hutool</groupId>
+                <artifactId>hutool-all</artifactId>
+                <version>${hutool.version}</version>
             </dependency>
 
         </dependencies>
