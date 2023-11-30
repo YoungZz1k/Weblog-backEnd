@@ -19,8 +19,7 @@ import com.youngzz1k.weblog.web.model.VO.article.*;
 import com.youngzz1k.weblog.web.model.VO.category.FindCategoryListRspVO;
 import com.youngzz1k.weblog.web.model.VO.tag.FindTagListRspVO;
 import com.youngzz1k.weblog.web.service.ArticleService;
-import com.youngzz1k.weblog.web.utils.RedisConstans;
-import com.youngzz1k.weblog.web.utils.nxLock;
+import com.youngzz1k.weblog.common.utils.nxLock;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
@@ -35,7 +34,7 @@ import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
-import static com.youngzz1k.weblog.web.utils.RedisConstans.*;
+import static com.youngzz1k.weblog.common.utils.RedisConstans.*;
 
 @Service
 @Slf4j

@@ -16,10 +16,12 @@ import com.youngzz1k.weblog.common.enums.ResponseCodeEnum;
 import com.youngzz1k.weblog.common.exception.BizException;
 import com.youngzz1k.weblog.common.model.vo.SelectRspVO;
 import com.youngzz1k.weblog.common.utils.PageResponse;
+import com.youngzz1k.weblog.common.utils.RedisConstans;
 import com.youngzz1k.weblog.common.utils.Response;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -27,6 +29,8 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
+
+import static com.youngzz1k.weblog.common.utils.RedisConstans.ARTICLE_CATEGORY;
 
 @Service
 @Slf4j
@@ -37,6 +41,8 @@ public class AdminCategoryServiceImpl implements AdminCategoryService {
 
     @Autowired
     private ArticleCategoryRelMapper articleCategoryRelMapper;
+    @Autowired
+    private StringRedisTemplate redisTemplate;
 
     /**
      * 添加分类
@@ -45,6 +51,10 @@ public class AdminCategoryServiceImpl implements AdminCategoryService {
      */
     @Override
     public Response addCategory(AddCategoryReqVO addCategoryReqVO) {
+
+        // 删除缓存
+        redisTemplate.delete(ARTICLE_CATEGORY);
+
         String categoryName = addCategoryReqVO.getName();
 
         // 先判断该分类是否已经存在
@@ -108,6 +118,10 @@ public class AdminCategoryServiceImpl implements AdminCategoryService {
      */
     @Override
     public Response deleteCategory(DeleteCategoryReqVO deleteCategoryReqVO) {
+
+        // 删除缓存
+        redisTemplate.delete(ARTICLE_CATEGORY);
+
         // 分类 ID
         Long categoryId = deleteCategoryReqVO.getId();
 

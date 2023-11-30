@@ -7,18 +7,27 @@ import com.youngzz1k.weblog.admin.model.vo.blogsettings.UpdateBlogSettingsReqVO;
 import com.youngzz1k.weblog.admin.service.AdminBlogSettingsService;
 import com.youngzz1k.weblog.common.domain.dos.BlogSettingsDO;
 import com.youngzz1k.weblog.common.domain.mapper.BlogSettingsMapper;
+import com.youngzz1k.weblog.common.utils.RedisConstans;
 import com.youngzz1k.weblog.common.utils.Response;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
+
+import static com.youngzz1k.weblog.common.utils.RedisConstans.ARTICLE_BLOGSETTINGS;
 
 @Service
 public class AdminBlogSettingsServiceImpl extends ServiceImpl<BlogSettingsMapper,BlogSettingsDO> implements AdminBlogSettingsService {
 
     @Autowired
     private BlogSettingsMapper blogSettingsMapper;
+    @Autowired
+    private StringRedisTemplate redisTemplate;
 
     @Override
     public Response updateBlogSettings(UpdateBlogSettingsReqVO updateBlogSettingsReqVO) {
+
+        // 删除缓存
+        redisTemplate.delete(ARTICLE_BLOGSETTINGS);
 
         // VO 转 DO
         BlogSettingsDO blogSettingsDO = BlogSettingsConvert.INSTANCE.convertVO2DO(updateBlogSettingsReqVO);

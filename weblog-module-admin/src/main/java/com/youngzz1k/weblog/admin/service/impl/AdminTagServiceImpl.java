@@ -22,10 +22,12 @@ import com.youngzz1k.weblog.common.enums.ResponseCodeEnum;
 import com.youngzz1k.weblog.common.exception.BizException;
 import com.youngzz1k.weblog.common.model.vo.SelectRspVO;
 import com.youngzz1k.weblog.common.utils.PageResponse;
+import com.youngzz1k.weblog.common.utils.RedisConstans;
 import com.youngzz1k.weblog.common.utils.Response;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -33,6 +35,8 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
+
+import static com.youngzz1k.weblog.common.utils.RedisConstans.ARTICLE_TAG;
 
 @Service
 @Slf4j
@@ -43,9 +47,14 @@ public class AdminTagServiceImpl extends ServiceImpl<TagMapper, TagDO> implement
 
     @Autowired
     private ArticleTagRelMapper articleTagRelMapper;
+    @Autowired
+    private StringRedisTemplate redisTemplate;
 
     @Override
     public Response addTags(AddTagReqVO addTagReqVO) {
+
+        // 删除缓存
+        redisTemplate.delete(ARTICLE_TAG);
 
         // Vo转Do
         List<TagDO> tagDos = addTagReqVO.getTags()
@@ -103,6 +112,10 @@ public class AdminTagServiceImpl extends ServiceImpl<TagMapper, TagDO> implement
      */
     @Override
     public Response deleteTag(DeleteTagReqVO deleteTagReqVO) {
+
+        // 删除缓存
+        redisTemplate.delete(ARTICLE_TAG);
+
         // 标签 ID
         Long tagId = deleteTagReqVO.getId();
 

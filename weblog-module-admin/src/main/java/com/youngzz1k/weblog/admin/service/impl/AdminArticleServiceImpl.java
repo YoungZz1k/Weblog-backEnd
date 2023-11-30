@@ -10,9 +10,11 @@ import com.youngzz1k.weblog.common.domain.mapper.*;
 import com.youngzz1k.weblog.common.enums.ResponseCodeEnum;
 import com.youngzz1k.weblog.common.exception.BizException;
 import com.youngzz1k.weblog.common.utils.PageResponse;
+import com.youngzz1k.weblog.common.utils.RedisConstans;
 import com.youngzz1k.weblog.common.utils.Response;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
@@ -24,6 +26,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
+
+import static com.youngzz1k.weblog.common.utils.RedisConstans.ARTICLE_KEY;
 
 @Service
 @Slf4j
@@ -41,6 +45,8 @@ public class AdminArticleServiceImpl implements AdminArticleService {
     private TagMapper tagMapper;
     @Autowired
     private ArticleTagRelMapper articleTagRelMapper;
+    @Autowired
+    private StringRedisTemplate redisTemplate;
 
     /**
      * 发布文章
@@ -51,6 +57,10 @@ public class AdminArticleServiceImpl implements AdminArticleService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public Response publishArticle(PublishArticleReqVO publishArticleReqVO) {
+
+        // 删除文章分页缓存
+        redisTemplate.delete(ARTICLE_KEY);
+
         // 1. VO 转 ArticleDO, 并保存
         ArticleDO articleDO = ArticleDO.builder()
                 .title(publishArticleReqVO.getTitle())
@@ -100,6 +110,9 @@ public class AdminArticleServiceImpl implements AdminArticleService {
      * @param publishTags
      */
     private void insertTags(Long articleId, List<String> publishTags) {
+        // 删除文章分页缓存
+        redisTemplate.delete(ARTICLE_KEY);
+
         // 筛选提交的标签（表中不存在的标签）
         List<String> notExistTags = null;
         // 筛选提交的标签（表中已存在的标签）
@@ -188,6 +201,10 @@ public class AdminArticleServiceImpl implements AdminArticleService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public Response deleteArticle(DeleteArticleReqVO deleteArticleReqVO) {
+
+        // 删除文章分页缓存
+        redisTemplate.delete(ARTICLE_KEY);
+
         Long articleId = deleteArticleReqVO.getId();
 
         // 1. 删除文章
@@ -285,6 +302,10 @@ public class AdminArticleServiceImpl implements AdminArticleService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public Response updateArticle(UpdateArticleReqVO updateArticleReqVO) {
+
+        // 删除文章分页缓存
+        redisTemplate.delete(ARTICLE_KEY);
+
         Long articleId = updateArticleReqVO.getId();
 
         // 1. VO 转 ArticleDO, 并更新

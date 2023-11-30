@@ -1,11 +1,10 @@
-package com.youngzz1k.weblog.web.utils;
+package com.youngzz1k.weblog.common.utils;
 
 import cn.hutool.core.util.BooleanUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.Resource;
 import java.util.concurrent.TimeUnit;
 
 @Component

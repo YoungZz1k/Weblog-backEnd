@@ -1,5 +1,8 @@
 package com.youngzz1k.weblog.web.service.impl;
 
+import cn.hutool.core.lang.TypeReference;
+import cn.hutool.json.JSONUtil;
+import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.youngzz1k.weblog.common.domain.dos.ArticleCategoryRelDO;
@@ -11,7 +14,9 @@ import com.youngzz1k.weblog.common.domain.mapper.CategoryMapper;
 import com.youngzz1k.weblog.common.enums.ResponseCodeEnum;
 import com.youngzz1k.weblog.common.exception.BizException;
 import com.youngzz1k.weblog.common.utils.PageResponse;
+import com.youngzz1k.weblog.common.utils.RedisConstans;
 import com.youngzz1k.weblog.common.utils.Response;
+import com.youngzz1k.weblog.common.utils.nxLock;
 import com.youngzz1k.weblog.web.convert.ArticleConvert;
 import com.youngzz1k.weblog.web.model.VO.category.FindCategoryArticlePageListReqVO;
 import com.youngzz1k.weblog.web.model.VO.category.FindCategoryArticlePageListRspVO;
@@ -19,12 +24,17 @@ import com.youngzz1k.weblog.web.model.VO.category.FindCategoryListRspVO;
 import com.youngzz1k.weblog.web.service.CategoryService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
+
+import static com.youngzz1k.weblog.common.utils.RedisConstans.ARTICLE_CATEGORY;
+import static com.youngzz1k.weblog.common.utils.RedisConstans.CATEGORY_LOCK;
 
 @Service
 @Slf4j
@@ -36,6 +46,10 @@ public class CategoryServiceImpl implements CategoryService {
     private ArticleCategoryRelMapper articleCategoryRelMapper;
     @Autowired
     private ArticleMapper articleMapper;
+    @Autowired
+    private StringRedisTemplate redisTemplate;
+    @Autowired
+    private nxLock nxLock;
 
     /**
      * 获取分类列表
@@ -44,6 +58,17 @@ public class CategoryServiceImpl implements CategoryService {
      */
     @Override
     public Response findCategoryList() {
+
+        // 查询缓存
+        String jsonStr = redisTemplate.opsForValue().get(ARTICLE_CATEGORY);
+        // 缓存不为空 直接返回
+        if (StringUtils.isNotBlank(jsonStr)){
+            List<FindCategoryListRspVO> vos = JSONUtil.toBean(jsonStr, new TypeReference<List<FindCategoryListRspVO>>() {
+            }, false);
+
+            return Response.success(vos);
+        }
+
         // 查询所有分类
         List<CategoryDO> categoryDOS = categoryMapper.selectList(Wrappers.emptyWrapper());
 
@@ -56,6 +81,24 @@ public class CategoryServiceImpl implements CategoryService {
                             .name(categoryDO.getName())
                             .build())
                     .collect(Collectors.toList());
+        }
+        // 写入缓存
+        try{
+            // 获取锁
+            if (!nxLock.tryLock(CATEGORY_LOCK)){
+                // 失败 等待重试
+                Thread.sleep(50);
+                findCategoryList();
+            }
+            // 成功 写入缓存
+            String json = JSONUtil.toJsonStr(vos);
+            // 缓存时间30min
+            redisTemplate.opsForValue().set(ARTICLE_CATEGORY,json,30L, TimeUnit.MINUTES);
+        }catch (InterruptedException e){
+            throw new RuntimeException(e);
+        }
+        finally {
+            nxLock.unLock(CATEGORY_LOCK);
         }
 
         return Response.success(vos);

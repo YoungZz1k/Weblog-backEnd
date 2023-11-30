@@ -1,5 +1,8 @@
 package com.youngzz1k.weblog.web.service.impl;
 
+import cn.hutool.core.lang.TypeReference;
+import cn.hutool.json.JSONUtil;
+import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.youngzz1k.weblog.common.domain.dos.ArticleDO;
@@ -11,7 +14,9 @@ import com.youngzz1k.weblog.common.domain.mapper.TagMapper;
 import com.youngzz1k.weblog.common.enums.ResponseCodeEnum;
 import com.youngzz1k.weblog.common.exception.BizException;
 import com.youngzz1k.weblog.common.utils.PageResponse;
+import com.youngzz1k.weblog.common.utils.RedisConstans;
 import com.youngzz1k.weblog.common.utils.Response;
+import com.youngzz1k.weblog.common.utils.nxLock;
 import com.youngzz1k.weblog.web.convert.ArticleConvert;
 import com.youngzz1k.weblog.web.model.VO.tag.FindTagArticlePageListReqVO;
 import com.youngzz1k.weblog.web.model.VO.tag.FindTagArticlePageListRspVO;
@@ -19,12 +24,17 @@ import com.youngzz1k.weblog.web.model.VO.tag.FindTagListRspVO;
 import com.youngzz1k.weblog.web.service.TagService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
+
+import static com.youngzz1k.weblog.common.utils.RedisConstans.ARTICLE_TAG;
+import static com.youngzz1k.weblog.common.utils.RedisConstans.TAG_LOCK;
 
 @Service
 @Slf4j
@@ -36,6 +46,10 @@ public class TagServiceImpl implements TagService {
     private ArticleTagRelMapper articleTagRelMapper;
     @Autowired
     private ArticleMapper articleMapper;
+    @Autowired
+    private StringRedisTemplate redisTemplate;
+    @Autowired
+    private nxLock nxLock;
 
     /**
      * 获取标签列表
@@ -44,6 +58,16 @@ public class TagServiceImpl implements TagService {
      */
     @Override
     public Response findTagList() {
+
+        // 先查询缓存
+        String jsonStr = redisTemplate.opsForValue().get(ARTICLE_TAG);
+        if (StringUtils.isNotBlank(jsonStr)){
+            // 有缓存直接返回
+            List<FindTagListRspVO> vos = JSONUtil.toBean(jsonStr, new TypeReference<List<FindTagListRspVO>>() {
+            }, false);
+
+            return Response.success(vos);
+        }
         // 查询所有标签
         List<TagDO> tagDOS = tagMapper.selectList(Wrappers.emptyWrapper());
 
@@ -56,6 +80,23 @@ public class TagServiceImpl implements TagService {
                             .name(tagDO.getName())
                             .build())
                     .collect(Collectors.toList());
+        }
+        // 写入缓存
+        // 先获取锁
+        try{
+            if (!nxLock.tryLock(TAG_LOCK)){
+                // 等待重试
+                Thread.sleep(50);
+                findTagList();
+            }
+            // 写缓存
+            String json = JSONUtil.toJsonStr(vos);
+            // 缓存30min
+            redisTemplate.opsForValue().set(ARTICLE_TAG,json,30L, TimeUnit.MINUTES);
+        }catch (InterruptedException e){
+            throw new RuntimeException(e);
+        }finally {
+            nxLock.unLock(TAG_LOCK);
         }
 
         return Response.success(vos);
