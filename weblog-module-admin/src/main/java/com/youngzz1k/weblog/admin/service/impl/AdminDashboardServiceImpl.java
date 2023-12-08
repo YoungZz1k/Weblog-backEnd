@@ -89,7 +89,7 @@ public class AdminDashboardServiceImpl implements AdminDashboardService {
         LocalDate startDate = currDate.minusYears(1);
 
         // 查找这一年内，每日发布的文章数量
-        List<ArticlePublishCountDO> articlePublishCountDOS = articleMapper.selectDateArticlePublishCount(startDate, currDate);
+        List<ArticlePublishCountDO> articlePublishCountDOS = articleMapper.selectDateArticlePublishCount(startDate, currDate.plusDays(1));
 
         Map<LocalDate, Long> map = null;
         if (!CollectionUtils.isEmpty(articlePublishCountDOS)) {
