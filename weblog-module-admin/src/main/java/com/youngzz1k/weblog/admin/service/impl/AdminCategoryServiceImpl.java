@@ -23,6 +23,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -50,10 +51,8 @@ public class AdminCategoryServiceImpl implements AdminCategoryService {
      * @return
      */
     @Override
+    @Transactional
     public Response addCategory(AddCategoryReqVO addCategoryReqVO) {
-
-        // 删除缓存
-        redisTemplate.delete(ARTICLE_CATEGORY);
 
         String categoryName = addCategoryReqVO.getName();
 
@@ -72,6 +71,9 @@ public class AdminCategoryServiceImpl implements AdminCategoryService {
 
         // 执行 insert
         categoryMapper.insert(insertCategoryDO);
+
+        // 删除缓存
+        redisTemplate.delete(ARTICLE_CATEGORY);
 
         return Response.success();
     }
@@ -117,10 +119,8 @@ public class AdminCategoryServiceImpl implements AdminCategoryService {
      * @return
      */
     @Override
+    @Transactional
     public Response deleteCategory(DeleteCategoryReqVO deleteCategoryReqVO) {
-
-        // 删除缓存
-        redisTemplate.delete(ARTICLE_CATEGORY);
 
         // 分类 ID
         Long categoryId = deleteCategoryReqVO.getId();
@@ -135,6 +135,9 @@ public class AdminCategoryServiceImpl implements AdminCategoryService {
 
         // 删除分类
         categoryMapper.deleteById(categoryId);
+
+        // 删除缓存
+        redisTemplate.delete(ARTICLE_CATEGORY);
 
         return Response.success();
     }

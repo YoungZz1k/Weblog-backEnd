@@ -12,6 +12,7 @@ import com.youngzz1k.weblog.common.utils.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import static com.youngzz1k.weblog.common.utils.RedisConstans.ARTICLE_BLOGSETTINGS;
 
@@ -24,10 +25,8 @@ public class AdminBlogSettingsServiceImpl extends ServiceImpl<BlogSettingsMapper
     private StringRedisTemplate redisTemplate;
 
     @Override
+    @Transactional
     public Response updateBlogSettings(UpdateBlogSettingsReqVO updateBlogSettingsReqVO) {
-
-        // 删除缓存
-        redisTemplate.delete(ARTICLE_BLOGSETTINGS);
 
         // VO 转 DO
         BlogSettingsDO blogSettingsDO = BlogSettingsConvert.INSTANCE.convertVO2DO(updateBlogSettingsReqVO);
@@ -35,6 +34,10 @@ public class AdminBlogSettingsServiceImpl extends ServiceImpl<BlogSettingsMapper
 
         // 保存或更新（当数据库中存在 ID 为 1 的记录时，则执行更新操作，否则执行插入操作）
         saveOrUpdate(blogSettingsDO);
+
+        // 删除缓存
+        redisTemplate.delete(ARTICLE_BLOGSETTINGS);
+
         return Response.success();
     }
 

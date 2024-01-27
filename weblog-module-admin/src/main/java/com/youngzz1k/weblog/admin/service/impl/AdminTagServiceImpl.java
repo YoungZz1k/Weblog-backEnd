@@ -29,6 +29,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -51,10 +52,8 @@ public class AdminTagServiceImpl extends ServiceImpl<TagMapper, TagDO> implement
     private StringRedisTemplate redisTemplate;
 
     @Override
+    @Transactional
     public Response addTags(AddTagReqVO addTagReqVO) {
-
-        // 删除缓存
-        redisTemplate.delete(ARTICLE_TAG);
 
         // Vo转Do
         List<TagDO> tagDos = addTagReqVO.getTags()
@@ -68,6 +67,8 @@ public class AdminTagServiceImpl extends ServiceImpl<TagMapper, TagDO> implement
         // 批量插入
         try {
             saveBatch(tagDos);
+            // 删除缓存
+            redisTemplate.delete(ARTICLE_TAG);
         } catch (Exception e){
             log.warn("该标签已存在",e);
         }
@@ -111,10 +112,8 @@ public class AdminTagServiceImpl extends ServiceImpl<TagMapper, TagDO> implement
      * @return
      */
     @Override
+    @Transactional
     public Response deleteTag(DeleteTagReqVO deleteTagReqVO) {
-
-        // 删除缓存
-        redisTemplate.delete(ARTICLE_TAG);
 
         // 标签 ID
         Long tagId = deleteTagReqVO.getId();
@@ -129,6 +128,8 @@ public class AdminTagServiceImpl extends ServiceImpl<TagMapper, TagDO> implement
 
         // 根据标签 ID 删除
         int count = tagMapper.deleteById(tagId);
+        // 删除缓存
+        redisTemplate.delete(ARTICLE_TAG);
 
         return count == 1 ? Response.success() : Response.fail(ResponseCodeEnum.TAG_NOT_EXISTED);
     }

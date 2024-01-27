@@ -58,9 +58,6 @@ public class AdminArticleServiceImpl implements AdminArticleService {
     @Transactional(rollbackFor = Exception.class)
     public Response publishArticle(PublishArticleReqVO publishArticleReqVO) {
 
-        // 删除文章分页缓存
-        redisTemplate.delete(ARTICLE_KEY);
-
         // 1. VO 转 ArticleDO, 并保存
         ArticleDO articleDO = ArticleDO.builder()
                 .title(publishArticleReqVO.getTitle())
@@ -101,6 +98,9 @@ public class AdminArticleServiceImpl implements AdminArticleService {
         List<String> publishTags = publishArticleReqVO.getTags();
         insertTags(articleId,publishTags);
 
+        // 删除文章分页缓存
+        redisTemplate.delete(ARTICLE_KEY);
+
         return Response.success();
     }
 
@@ -110,8 +110,6 @@ public class AdminArticleServiceImpl implements AdminArticleService {
      * @param publishTags
      */
     private void insertTags(Long articleId, List<String> publishTags) {
-        // 删除文章分页缓存
-        redisTemplate.delete(ARTICLE_KEY);
 
         // 筛选提交的标签（表中不存在的标签）
         List<String> notExistTags = null;
@@ -202,9 +200,6 @@ public class AdminArticleServiceImpl implements AdminArticleService {
     @Transactional(rollbackFor = Exception.class)
     public Response deleteArticle(DeleteArticleReqVO deleteArticleReqVO) {
 
-        // 删除文章分页缓存
-        redisTemplate.delete(ARTICLE_KEY);
-
         Long articleId = deleteArticleReqVO.getId();
 
         // 1. 删除文章
@@ -218,6 +213,9 @@ public class AdminArticleServiceImpl implements AdminArticleService {
 
         // 4. 删除文章-标签关联记录
         articleTagRelMapper.deleteByArticleId(articleId);
+
+        // 删除文章分页缓存
+        redisTemplate.delete(ARTICLE_KEY);
 
         return Response.success();
     }
@@ -303,9 +301,6 @@ public class AdminArticleServiceImpl implements AdminArticleService {
     @Transactional(rollbackFor = Exception.class)
     public Response updateArticle(UpdateArticleReqVO updateArticleReqVO) {
 
-        // 删除文章分页缓存
-        redisTemplate.delete(ARTICLE_KEY);
-
         Long articleId = updateArticleReqVO.getId();
 
         // 1. VO 转 ArticleDO, 并更新
@@ -355,6 +350,9 @@ public class AdminArticleServiceImpl implements AdminArticleService {
         articleTagRelMapper.deleteByArticleId(articleId);
         List<String> publishTags = updateArticleReqVO.getTags();
         insertTags(articleId, publishTags);
+
+        // 删除文章分页缓存
+        redisTemplate.delete(ARTICLE_KEY);
 
         return Response.success();
     }
