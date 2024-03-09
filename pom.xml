@@ -67,6 +67,9 @@
 
         <lucene.version>8.11.1</lucene.version>
 
+        <commons-io.version>2.11.0</commons-io.version>
+
+
     </properties>
 
     <!--依赖统一管理-->
@@ -227,6 +230,13 @@
                 <groupId>org.apache.lucene</groupId>
                 <artifactId>lucene-queryparser</artifactId>
                 <version>${lucene.version}</version>
+            </dependency>
+
+            <!-- 工具包 -->
+            <dependency>
+                <groupId>commons-io</groupId>
+                <artifactId>commons-io</artifactId>
+                <version>${commons-io.version}</version>
             </dependency>
 
         </dependencies>

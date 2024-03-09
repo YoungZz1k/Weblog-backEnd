@@ -23,3 +23,9 @@ minio:
   accessKey: young
   secretKey: 907175262
   bucketName: weblog
+
+#=================================================================
+# Lucene 全文检索
+#=================================================================
+lucene:
+  indexDir: E:\\code\\WebLog\\lucene-index # lucene 索引存放的位置
