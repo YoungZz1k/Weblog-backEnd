@@ -3,6 +3,9 @@ package com.youngzz1k.weblog.admin.service.impl;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.google.common.collect.Lists;
 import com.youngzz1k.weblog.admin.convert.ArticleDetailConvert;
+import com.youngzz1k.weblog.admin.event.DeleteArticleEvent;
+import com.youngzz1k.weblog.admin.event.PublishArticleEvent;
+import com.youngzz1k.weblog.admin.event.UpdateArticleEvent;
 import com.youngzz1k.weblog.admin.model.vo.article.*;
 import com.youngzz1k.weblog.admin.service.AdminArticleService;
 import com.youngzz1k.weblog.common.domain.dos.*;
@@ -13,6 +16,7 @@ import com.youngzz1k.weblog.common.utils.PageResponse;
 import com.youngzz1k.weblog.common.utils.Response;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
@@ -41,6 +45,8 @@ public class AdminArticleServiceImpl implements AdminArticleService {
     private TagMapper tagMapper;
     @Autowired
     private ArticleTagRelMapper articleTagRelMapper;
+    @Autowired
+    private ApplicationEventPublisher eventPublisher;
 
     /**
      * 发布文章
@@ -90,6 +96,9 @@ public class AdminArticleServiceImpl implements AdminArticleService {
         // 4. 保存文章关联的标签集合
         List<String> publishTags = publishArticleReqVO.getTags();
         insertTags(articleId,publishTags);
+
+        // 发送文章发布事件
+        eventPublisher.publishEvent(new PublishArticleEvent(this, articleId));
 
         return Response.success();
     }
@@ -201,6 +210,9 @@ public class AdminArticleServiceImpl implements AdminArticleService {
 
         // 4. 删除文章-标签关联记录
         articleTagRelMapper.deleteByArticleId(articleId);
+
+        // 发布文章删除事件
+        eventPublisher.publishEvent(new DeleteArticleEvent(this, articleId));
 
         return Response.success();
     }
@@ -334,6 +346,9 @@ public class AdminArticleServiceImpl implements AdminArticleService {
         articleTagRelMapper.deleteByArticleId(articleId);
         List<String> publishTags = updateArticleReqVO.getTags();
         insertTags(articleId, publishTags);
+
+        // 发布文章修改事件
+        eventPublisher.publishEvent(new UpdateArticleEvent(this, articleId));
 
         return Response.success();
     }

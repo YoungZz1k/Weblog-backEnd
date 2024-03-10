@@ -18,6 +18,11 @@
 
 		<dependency>
 			<groupId>com.youngzz1k</groupId>
+			<artifactId>weblog-module-search</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>com.youngzz1k</groupId>
 			<artifactId>weblog-module-common</artifactId>
 		</dependency>
 
